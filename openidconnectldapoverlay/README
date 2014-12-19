@@ -1,1 +1,3 @@
 This is a version of the MITREid Connect server that speaks to a backend LDAP system for its user information and authentication.
+
+For correct configuration, insert the relevant urls and credentials into the XML files found in ldap-server-overlay/src/main/webapp/WEB-INF
