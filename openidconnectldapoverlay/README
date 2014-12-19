@@ -1,0 +1,1 @@
+This is a version of the MITREid Connect server that speaks to a backend LDAP system for its user information and authentication.
