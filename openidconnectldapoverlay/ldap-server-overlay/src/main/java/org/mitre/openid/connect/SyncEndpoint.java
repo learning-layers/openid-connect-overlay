@@ -363,6 +363,6 @@ public class SyncEndpoint {
 	}
 	
 	public static String random() {
-		return UUID.randomUUID().toString();
+		return UUID.randomUUID().toString().substring(19);
 	}
 }
