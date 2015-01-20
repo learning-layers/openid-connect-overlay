@@ -43,6 +43,7 @@ $(document).ready(function() {
 					<input type="submit" class="btn" value="Login" name="submit">
 				</div>
 			</form>
+			<a href="/account/public/NewUser?forwardURL=/o/oauth2/login">Register a new account</a>
 		</div>
 	</div>
 </div>

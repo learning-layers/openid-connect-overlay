@@ -272,8 +272,8 @@ public class SyncEndpoint {
 			
 
 			
-			if (attr.get("jpegPhoto") != null) {
-				ui.setPicture(attr.get("jpegPhoto").get().toString());
+			if (attr.get("labeledURI") != null) {
+				ui.setPicture(attr.get("labeledURI").get().toString());
 			}
 			
 			return ui;
