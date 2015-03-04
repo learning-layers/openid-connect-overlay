@@ -28,10 +28,15 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
 
-	<bean id="configBean" class="org.mitre.openid.connect.config.ConfigurationPropertiesBean">
-		<property name="issuer" value="" /> <!-- Issuer URL goes here -->
- 		<property name="logoImageUrl" value="api.learning-layers.eu/logo.png" />
- 		<property name="topbarTitle" value="Learning Layers OIDC" />
-	</bean>
+	<!-- 
+
+		Load this configuration file from /etc/mitreid-connect instead of inside the war.
+		
+		See example configuration file here: https://github.com/mitreid-connect/OpenID-Connect-Java-Spring-Server/blob/master/openid-connect-server-webapp/src/main/webapp/WEB-INF/server-config.xml
+	
+	-->
+	
+
+	<import resource="file:/etc/mitreid-connect/server-config.xml" />
 	
 </beans>
