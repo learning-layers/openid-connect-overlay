@@ -21,7 +21,12 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
+import java.util.Date;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+
 
 import org.mitre.openid.connect.model.DefaultUserInfo;
 import org.mitre.openid.connect.model.UserInfo;
@@ -68,8 +73,6 @@ public class SyncEndpoint {
 		if(res.size()>1) return new ResponseEntity(HttpStatus.CONFLICT);
 		if(res.size()==0) return new ResponseEntity(HttpStatus.NOT_FOUND);
 		Map<String,Object> args = createArgs(res.get(0));
-		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-		args.put("updated_time",timeStamp);
 		args.put("sub",random());
 		String argParams=mapKeys(args);
 		String namedParams=mapSqlValues(args);
@@ -89,8 +92,6 @@ public class SyncEndpoint {
 		if(res.size()>1) return new ResponseEntity(HttpStatus.CONFLICT);
 		if(res.size()==0) return new ResponseEntity(HttpStatus.NOT_FOUND);
 		Map<String,Object> args = createArgs(res.get(0));
-		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-		args.put("updated_time",timeStamp);
 		String argParams=mapKeys(args);
 		String namedParams=mapSqlValues(args);
 		int rowcount=namedParameterJdbcTemplate.queryForInt("select COUNT(*) from user_info where preferred_username= :preferred_username",args);
@@ -229,11 +230,7 @@ public class SyncEndpoint {
 			
 			// save the UID as the preferred username
 			ui.setPreferredUsername(attr.get("uid").get().toString());
-			
-			// for now we use the UID as the subject as well (this should probably be different)
-			ui.setSub(attr.get("uid").get().toString());
-			
-			
+						
 			// add in the optional fields
 			
 			// email address
@@ -241,12 +238,16 @@ public class SyncEndpoint {
 				ui.setEmail(attr.get("mail").get().toString());
 				// if this domain also provisions email addresses, this should be set to true
 				ui.setEmailVerified(false);
-			}			
+			}else{
+				ui.setEmail(null);
+			}
 			// phone number
 			if (attr.get("telephoneNumber") != null) {
 				ui.setPhoneNumber(attr.get("telephoneNumber").get().toString());
 				// if this domain also provisions phone numbers, this should be set to true
 				ui.setPhoneNumberVerified(false);
+			}else{
+				ui.setPhoneNumber(null);
 			}
 			
 			// name structure
@@ -254,6 +255,9 @@ public class SyncEndpoint {
 			if (attr.get("givenName") != null) {
 				ui.setGivenName(attr.get("givenName").get().toString());
 				ui.setName(attr.get("givenName").get().toString());
+			}else{
+				ui.setGivenName(null);
+				ui.setName(null);
 			}
 			
 			if (attr.get("initials") != null) {
@@ -261,6 +265,8 @@ public class SyncEndpoint {
 				if(ui.getName()!=null){
 					ui.setName(ui.getName() + " " + attr.get("initials").get().toString());
 				}
+			}else{
+				ui.setMiddleName(null);
 			}
 			
 			if (attr.get("sn") != null) {
@@ -269,11 +275,25 @@ public class SyncEndpoint {
 					ui.setName(ui.getName() + " " + attr.get("sn").get().toString());
 				}
 			}
+			else{
+				ui.setFamilyName(null);
+			}
 			
 
 			
 			if (attr.get("labeledURI") != null) {
 				ui.setPicture(attr.get("labeledURI").get().toString());
+			}
+			else{
+				ui.setPicture("https://api.learning-layers.eu/profile.png");
+			}
+			
+			if (attr.get("pwmEventLog")!=null){
+				String date = convertLogToUpdate(attr.get("pwmEventLog").get().toString());
+				ui.setUpdatedTime(date);
+			}
+			else{
+				ui.setUpdatedTime(new Date().toString());
 			}
 			
 			return ui;
@@ -290,6 +310,27 @@ public class SyncEndpoint {
 		return items;
 	}
 
+	
+	public String extractDateFromLog(String log){
+		if (log!=null){
+			Pattern pattern = Pattern.compile("timestamp=\"(\\d*)\" eventCode=\"EventLog_CreateUser\"");
+			Matcher matcher2 = pattern.matcher(log);
+			String value="";
+			while(matcher2.find()){
+				value = matcher2.group(1);
+			}
+			pattern = Pattern.compile("timestamp=\"(\\d*)\" eventCode=\"EventLog_UpdateProfile\"");
+			Matcher matcher = pattern.matcher(log);
+			while(matcher.find()){
+				value = matcher.group(1);
+			}
+			if(value!=""){
+				Date update = new Date(Long.parseLong(value));
+				return update.toString();
+			}
+		}
+		return new Date().toString();
+	}
 
 	//Creates a HashMap from UserInfo which can be used for named queries
 	private Map<String,Object> createArgs(UserInfo curr){
@@ -298,31 +339,50 @@ public class SyncEndpoint {
 		if(curr.getGivenName()!=null){
 			args.put("name",curr.getGivenName());
 			args.put("given_name",curr.getGivenName());
+		}else{
+			args.put("given_name",null);
 		}
 		if(curr.getMiddleName()!=null){
 			args.put("name",args.get("name")+ " " + curr.getMiddleName());
 			args.put("middle_name",curr.getMiddleName());
+		}else{
+			args.put("middle_name",null);
 		}
 		if(curr.getFamilyName()!=null){
 			args.put("name",args.get("name") +" "+curr.getFamilyName());
 			args.put("family_name",curr.getFamilyName());
+		}else{
+			args.put("family_name",null);
 		}
 		
 		if(curr.getEmail()!=null){
 			args.put("email",curr.getEmail());
 			args.put("email_verified",1);
+		}else{
+			args.put("email",null);
 		}
 		if(curr.getPhoneNumber()!=null){
 			args.put("phone_number",curr.getPhoneNumber());
 			args.put("phone_number_verified",1);
+		}else{
+			args.put("phone_number",null);
 		}
 		if(curr.getNickname()!=null) args.put("nickname",curr.getNickname());
+		else args.put("nickname",null);
 		if(curr.getProfile()!=null) args.put("profile",curr.getProfile());
+		else args.put("profile",null);
 		if(curr.getPicture()!=null) args.put("picture",curr.getPicture());
+		else args.put("picture",null);
 		if(curr.getWebsite()!=null) args.put("website",curr.getWebsite());
+		else args.put("website",null);
 		if(curr.getGender()!=null) args.put("gender",curr.getGender());
+		else args.put("gender",null);
 		if(curr.getZoneinfo()!=null) args.put("zone_info",curr.getZoneinfo());
+		else args.put("zone_info",null);
 		if(curr.getBirthdate()!=null) args.put("birthdate",curr.getBirthdate());
+		else args.put("birthdate",null);
+		if(curr.getUpdatedTime()!=null) args.put("updated_time",curr.getUpdatedTime());
+		else args.put("updated_time",null);
 		return args;
 	}
 
