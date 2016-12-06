@@ -45,16 +45,24 @@
     <dependency>
 		<groupId>org.springframework</groupId>
 		<artifactId>spring-tx</artifactId>
-		<version>4.1.1.RELEASE</version>
+		<version>4.1.9.RELEASE</version>
 	</dependency>
-  </dependencies>
+	 <dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-jdbc</artifactId>
+		<version>4.1.9.RELEASE</version>
+	 </dependency>
+	 <dependency>
+   		 <groupId>org.springframework</groupId>
+    	 <artifactId>spring-core</artifactId>
+    	 <version>4.1.9.RELEASE</version>
+    </dependency>
+ 	 </dependencies>
 
   <properties>
     <java-version>1.7</java-version>
-    <org.springframework-version>4.1.1.RELEASE</org.springframework-version>
-    <org.slf4j-version>1.7.7</org.slf4j-version>
-    <spring.security.version>3.1.7.RELEASE</spring.security.version>
-    <mitreid-version>1.1.16</mitreid-version>
+    <spring.security.version>4.0.0.RELEASE</spring.security.version>
+    <mitreid-version>1.2.6</mitreid-version>
   </properties>
 
   <build>

@@ -148,7 +148,7 @@ public class LdapUserInfoRepository implements UserInfoRepository {
 	}
 	
 	
-	@Override
+/*	@Override
 	public UserInfo getBySubject(String sub) {
 		// TODO: right now the subject is the username, should probably change
 		
@@ -171,12 +171,24 @@ public class LdapUserInfoRepository implements UserInfoRepository {
 	public Collection<? extends UserInfo> getAll() {
 		// return a copy of the currently cached users
 		return cache.asMap().values();
-	}
+	}  */
 
 	@Override
 	public UserInfo getByUsername(String username) {
 		try {
 			return cache.get(username);
+		} catch (UncheckedExecutionException ue) {
+			return null;
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	@Override
+	public UserInfo getByEmailAddress(String mail) {
+		try {
+			return cache.get(mail);
 		} catch (UncheckedExecutionException ue) {
 			return null;
 		} catch (ExecutionException e) {

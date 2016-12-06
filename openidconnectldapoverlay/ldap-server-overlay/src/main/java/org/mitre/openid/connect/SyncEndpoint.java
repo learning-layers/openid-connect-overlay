@@ -33,7 +33,7 @@ import javax.naming.directory.Attributes;
 
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.text.ParseException;
@@ -179,7 +179,7 @@ public class SyncEndpoint {
 		}
 	};
 	
-	private RowMapper rowMapper = new RowMapper(){
+	private BeanPropertyRowMapper rowMapper = new BeanPropertyRowMapper(){
 		@Override
 		public Object mapRow(ResultSet rs,int rowNum) throws SQLException{
 			try{
