@@ -11,30 +11,7 @@
   </modules>
 
   <dependencies>
-     <dependency>
-    	<groupId>org.springframework.security</groupId>
-    	<artifactId>spring-security-ldap</artifactId>
-    	<version>${spring.security.version}</version>
-        <exclusions>
-        	<exclusion>
-        		<groupId>org.springframework</groupId>
-        		<artifactId>*</artifactId>
-        	</exclusion>
-        </exclusions>
-    </dependency>   
-    <dependency>
-      <groupId>org.mitre</groupId>
-      <artifactId>openid-connect-server-webapp</artifactId>
-      <type>war</type>
-      <version>${mitreid-version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.mitre</groupId>
-        <artifactId>openid-connect-parent</artifactId>
-        <type>pom</type>
-        <version>${mitreid-version}</version>
-        <scope>import</scope>
-    </dependency>
+    
    
     <dependency>
             <groupId>mysql</groupId>
@@ -61,8 +38,8 @@
 
   <properties>
     <java-version>1.7</java-version>
-    <spring.security.version>4.0.0.RELEASE</spring.security.version>
     <mitreid-version>1.2.6</mitreid-version>
+    <spring.security.version>3.1.4.RELEASE</spring.security.version>
   </properties>
 
   <build>
