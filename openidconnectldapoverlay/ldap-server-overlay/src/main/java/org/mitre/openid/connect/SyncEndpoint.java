@@ -73,7 +73,7 @@ public class SyncEndpoint {
 		args.put("sub",random());
 		String argParams=mapKeys(args);
 		String namedParams=mapSqlValues(args);
-		if(namedParameterJdbcTemplate.queryForInt("select COUNT(*) from user_info where preferred_username= :preferred_username and email= :email",args)==0){
+		if(namedParameterJdbcTemplate.queryForObject("select COUNT(*) from user_info where preferred_username= :preferred_username and email= :email",args, Integer.class)==0){
 			namedParameterJdbcTemplate.update("insert into user_info "+ argParams +" values "
 					+ namedParams,args);
 			return new ResponseEntity(HttpStatus.OK);
@@ -93,7 +93,7 @@ public class SyncEndpoint {
 		args.put("updated_time",timeStamp);
 		String argParams=mapKeys(args);
 		String namedParams=mapSqlValues(args);
-		int rowcount=namedParameterJdbcTemplate.queryForInt("select COUNT(*) from user_info where preferred_username= :preferred_username",args);
+		int rowcount=namedParameterJdbcTemplate.queryForObject("select COUNT(*) from user_info where preferred_username= :preferred_username",args, Integer.class);
 		if(rowcount==1){
 			namedParameterJdbcTemplate.update("UPDATE user_info SET "+mapUpdateValues(args)+" WHERE preferred_username = :preferred_username", args);
 			return new ResponseEntity(HttpStatus.OK);
