@@ -16,30 +16,30 @@
     <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.34</version>
+            <version>5.1.40</version>
             <scope>runtime</scope>
         </dependency>
     <dependency>
 		<groupId>org.springframework</groupId>
 		<artifactId>spring-tx</artifactId>
-		<version>4.1.9.RELEASE</version>
+		<version>4.3.3.RELEASE</version>
 	</dependency>
 	 <dependency>
 		<groupId>org.springframework</groupId>
 		<artifactId>spring-jdbc</artifactId>
-		<version>4.1.9.RELEASE</version>
+		<version>4.3.3.RELEASE</version>
 	 </dependency>
 	 <dependency>
    		 <groupId>org.springframework</groupId>
     	 <artifactId>spring-core</artifactId>
-    	 <version>4.1.9.RELEASE</version>
+    	 <version>4.3.3.RELEASE</version>
     </dependency>
  	 </dependencies>
 
   <properties>
-    <java-version>1.7</java-version>
+    <java-version>1.8</java-version>
     <mitreid-version>1.2.6</mitreid-version>
-    <spring.security.version>3.1.4.RELEASE</spring.security.version>
+    <spring.security.version>4.2.0.RELEASE</spring.security.version>
   </properties>
 
   <build>
