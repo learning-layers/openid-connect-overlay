@@ -5,6 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
@@ -60,9 +62,9 @@ public class SyncEndpoint {
 	
 	
 	
-	@RequestMapping("/updateuser/new")
+	@RequestMapping(value="/updateuser/new/{obj}", method=RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<String> createUser(@RequestBody String obj){
+	public ResponseEntity<String> createUser(@PathVariable String obj){
 		Filter find = new EqualsFilter("uid",obj);
 		List<UserInfo> res = ldapTemplate.search("",find.encode(),attributesMapper);
 		if(res.size()>1) return new ResponseEntity(HttpStatus.CONFLICT);
@@ -81,9 +83,9 @@ public class SyncEndpoint {
 		return new ResponseEntity(HttpStatus.BAD_REQUEST);
 	}
 	
-	@RequestMapping("/updateuser/update")
+	@RequestMapping(value="/updateuser/update/{obj}", method=RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<String> updateUser(@RequestBody String obj){
+	public ResponseEntity<String> updateUser(@PathVariable String obj){
 		Filter find = new EqualsFilter("uid",obj);
 		List<UserInfo> res = ldapTemplate.search("",find.encode(),attributesMapper);
 		if(res.size()>1) return new ResponseEntity(HttpStatus.CONFLICT);
