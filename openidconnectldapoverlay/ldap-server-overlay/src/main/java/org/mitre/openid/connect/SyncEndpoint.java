@@ -75,7 +75,9 @@ public class SyncEndpoint {
 		args.put("sub",random());
 		String argParams=mapKeys(args);
 		String namedParams=mapSqlValues(args);
-		if(namedParameterJdbcTemplate.queryForObject("select COUNT(*) from user_info where preferred_username= :preferred_username and email= :email",args, Integer.class)==0){
+//		if(namedParameterJdbcTemplate.queryForObject("select COUNT(*) from user_info where preferred_username= :preferred_username and email= :email",args, Integer.class)==0){
+		if(namedParameterJdbcTemplate.queryForObject("select COUNT(*) from user_info where preferred_username= :preferred_username",args, Integer.class)==0){
+
 			namedParameterJdbcTemplate.update("insert into user_info "+ argParams +" values "
 					+ namedParams,args);
 			return new ResponseEntity(HttpStatus.OK);
